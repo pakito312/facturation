@@ -652,176 +652,83 @@
         // Service Worker pour PWA
         if ('serviceWorker' in navigator) {
             // Créer le service worker dynamiquement
-            const swCode = `
-                const CACHE_NAME = 'facturation-pro-v1';
-                const OFFLINE_URL = '/offline.html';
+            const swCode = `const CACHE_NAME = 'facturation-pro-v1';
+const OFFLINE_URL = '/offline.html';
 
-                // Installation du Service Worker
-                self.addEventListener('install', event => {
-                    console.log('Service Worker: Installing...');
-                    event.waitUntil(
-                        caches.open(CACHE_NAME)
-                            .then(cache => {
-                                console.log('Service Worker: Caching files');
-                                // Cache la page actuelle et les ressources essentielles
-                                return cache.addAll([
-                                    '/',
-                                    '/index.html',
-                                    'data:text/html,<html><head><title>Hors ligne</title></head><body><h1>Application hors ligne</h1><p>Vous êtes actuellement hors ligne. L\\'application fonctionne en mode local.</p></body></html>'
-                                ]).catch(err => {
-                                    console.log('Service Worker: Cache addAll failed', err);
-                                });
-                            })
-                            .then(() => {
-                                console.log('Service Worker: Installed');
-                                // Force l'activation immédiate
-                                return self.skipWaiting();
-                            })
-                    );
-                });
+// Installation du Service Worker
+self.addEventListener('install', event => {
+    console.log('Service Worker: Installing...');
+    event.waitUntil((async () => {
+        const cache = await caches.open(CACHE_NAME);
+        console.log('Service Worker: Caching core files');
+        try {
+            await cache.addAll([
+                '/',
+                '/index.html',
+                OFFLINE_URL
+            ]);
+        } catch (err) {
+            console.error('Service Worker: Cache addAll failed', err);
+        }
+        self.skipWaiting();
+    })());
+});
 
-                // Activation du Service Worker
-                self.addEventListener('activate', event => {
-                    console.log('Service Worker: Activating...');
-                    event.waitUntil(
-                        caches.keys()
-                            .then(cacheNames => {
-                                return Promise.all(
-                                    cacheNames.map(cacheName => {
-                                        if (cacheName !== CACHE_NAME) {
-                                            console.log('Service Worker: Clearing old cache:', cacheName);
-                                            return caches.delete(cacheName);
-                                        }
-                                    })
-                                );
-                            })
-                            .then(() => {
-                                console.log('Service Worker: Activated');
-                                // Prendre le contrôle immédiatement
-                                return self.clients.claim();
-                            })
-                    );
-                });
+// Activation du Service Worker
+self.addEventListener('activate', event => {
+    console.log('Service Worker: Activating...');
+    event.waitUntil((async () => {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+            cacheNames.map(name => {
+                if (name !== CACHE_NAME) {
+                    console.log('Service Worker: Clearing old cache:', name);
+                    return caches.delete(name);
+                }
+            })
+        );
+        self.clients.claim();
+        console.log('Service Worker: Activated');
+    })());
+});
 
-                // Interception des requêtes réseau
-                self.addEventListener('fetch', event => {
-                    // Stratégie: Cache First avec fallback
-                    if (event.request.destination === 'document' || 
-                        event.request.destination === 'script' ||
-                        event.request.destination === 'style' ||
-                        event.request.url.includes('localhost') ||
-                        event.request.url.includes('127.0.0.1') ||
-                        event.request.url.includes('file://')) {
-                        
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then(cachedResponse => {
-                                    if (cachedResponse) {
-                                        console.log('Service Worker: Serving from cache:', event.request.url);
-                                        return cachedResponse;
-                                    }
+// Interception des requêtes réseau
+self.addEventListener('fetch', event => {
+    // Stratégie: Cache First avec fallback
+    if (event.request.method !== 'GET') return;
 
-                                    // Si pas en cache, essayer le réseau
-                                    return fetch(event.request)
-                                        .then(networkResponse => {
-                                            // Mettre en cache la réponse pour les prochaines fois
-                                            if (networkResponse && networkResponse.status === 200) {
-                                                const responseClone = networkResponse.clone();
-                                                caches.open(CACHE_NAME)
-                                                    .then(cache => {
-                                                        cache.put(event.request, responseClone);
-                                                    });
-                                            }
-                                            return networkResponse;
-                                        })
-                                        .catch(err => {
-                                            console.log('Service Worker: Network fetch failed, serving offline page');
-                                            // En cas d'échec réseau, retourner une page hors ligne
-                                            if (event.request.destination === 'document') {
-                                                return new Response(
-                                                    \`<!DOCTYPE html>
-                                                    <html lang="fr">
-                                                    <head>
-                                                        <meta charset="UTF-8">
-                                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                        <title>Facturation Pro - Hors ligne</title>
-                                                        <style>
-                                                            body {
-                                                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                                                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                                                                min-height: 100vh;
-                                                                display: flex;
-                                                                align-items: center;
-                                                                justify-content: center;
-                                                                margin: 0;
-                                                                color: white;
-                                                                text-align: center;
-                                                                padding: 20px;
-                                                            }
-                                                            .offline-container {
-                                                                background: rgba(255,255,255,0.1);
-                                                                border-radius: 20px;
-                                                                padding: 40px;
-                                                                backdrop-filter: blur(10px);
-                                                                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-                                                                max-width: 500px;
-                                                            }
-                                                            h1 { font-size: 2.5rem; margin-bottom: 20px; }
-                                                            p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
-                                                            .btn {
-                                                                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-                                                                color: white;
-                                                                border: none;
-                                                                padding: 12px 24px;
-                                                                border-radius: 12px;
-                                                                cursor: pointer;
-                                                                font-size: 1rem;
-                                                                font-weight: 600;
-                                                                text-decoration: none;
-                                                                display: inline-block;
-                                                                transition: transform 0.3s ease;
-                                                            }
-                                                            .btn:hover { transform: translateY(-2px); }
-                                                        </style>
-                                                    </head>
-                                                    <body>
-                                                        <div class="offline-container">
-                                                            <h1> Mode Hors Ligne</h1>
-                                                            <p>Vous êtes actuellement hors ligne, mais l'application Facturation Pro continue de fonctionner avec vos données locales.</p>
-                                                            <p> Toutes vos factures sont sauvegardées localement et seront synchronisées une fois la connexion rétablie.</p>
-                                                            <a href="javascript:location.reload()" class="btn"> Réessayer</a>
-                                                        </div>
-                                                        <script>
-                                                            // Rediriger automatiquement vers l'app si elle est en cache
-                                                            setTimeout(() => {
-                                                                if (navigator.onLine) {
-                                                                    location.reload();
-                                                                }
-                                                            }, 3000);
-                                                        </script>
-                                                    </body>
-                                                    </html>\`,
-                                                    {
-                                                        headers: {
-                                                            'Content-Type': 'text/html'
-                                                        }
-                                                    }
-                                                );
-                                            }
-                                            return new Response('Offline', { status: 503 });
-                                        });
-                                })
-                        );
-                    }
-                });
+    event.respondWith((async () => {
+        const cachedResponse = await caches.match(event.request);
+        if (cachedResponse) {
+            console.log('Service Worker: Serving from cache:', event.request.url);
+            return cachedResponse;
+        }
 
-                // Messages du client principal
-                self.addEventListener('message', event => {
-                    if (event.data && event.data.type === 'SKIP_WAITING') {
-                        self.skipWaiting();
-                    }
-                });
-            `;
+        try {
+            const networkResponse = await fetch(event.request);
+            if (networkResponse && networkResponse.status === 200) {
+                const cache = await caches.open(CACHE_NAME);
+                cache.put(event.request, networkResponse.clone());
+            }
+            return networkResponse;
+        } catch (err) {
+            console.warn('Service Worker: Network fetch failed', err);
+            if (event.request.destination === 'document') {
+                return caches.match(OFFLINE_URL) || new Response('Offline', { status: 503 });
+            }
+            return new Response('Offline', { status: 503 });
+        }
+    })());
+});
+
+// Messages du client principal
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
+`;
+                
 
             // Convertir le code en blob et l'enregistrer
             const swBlob = new Blob([swCode], { type: 'application/javascript' });
