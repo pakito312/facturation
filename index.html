@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facturation Pro</title>
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRmFjdHVyYXRpb24gUHJvIiwic2hvcnRfbmFtZSI6IkZhY3R1cmF0aW9uIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjE3MmEiLCJ0aGVtZV9jb2xvciI6IiMzYjgyZjYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lnZG1sbGQwSnZlRDBpTUNBd0lERXlPQ0F4TWpnaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BISmxZM1FnZUQwaU1UQWlJSGs5SWpFd0lpQjNhV1IwYUQwaU1UQTRJaUJvWldsbmFIUTlJakV3T0NJZ1ptbHNiRDBpSXpOaU9ESm1OaUlnY25nOUlqRXdJaUF2UGp4MGIzUmhiQzU0Wm1WMFpDaHJaWGxCZUdselFucDJjeWtwSUVkeWRUaGpaU1JyZW5wdmEydzZJQ3AyYTI1M1pIcGxaM1JyYmtsQlJrbzNRUzh4U0VocWNHSjNlbU5oTjJ0b1puaEdVQ2hJTVZCNmVrbzBTbUo2ZUhSbFZXeFphakJhVERJeExXUXhaV1ZxY0NCU1N6QXViR1ZrWW5OT0wyOXRUM05WUlZ0TGJsZHVTSEZwTUVsQlIwRWlQaThTRFV6WnpkQ1QyVkpSVGRFVXpsUklWVkk0Vm1WUlNTOXliaTh2YlcxWE0zQjJNRXBOZVZNdmN5OXZQeUkvUEM5MGIzUmhiRDQ4TDNOMlp6ND0iLCJzaXplcyI6IjEyOHgxMjgiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+    <link rel="manifest"
+        href="data:application/json;base64,eyJuYW1lIjoiRmFjdHVyYXRpb24gUHJvIiwic2hvcnRfbmFtZSI6IkZhY3R1cmF0aW9uIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjE3MmEiLCJ0aGVtZV9jb2xvciI6IiMzYjgyZjYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lnZG1sbGQwSnZlRDBpTUNBd0lERXlPQ0F4TWpnaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BISmxZM1FnZUQwaU1UQWlJSGs5SWpFd0lpQjNhV1IwYUQwaU1UQTRJaUJvWldsbmFIUTlJakV3T0NJZ1ptbHNiRDBpSXpOaU9ESm1OaUlnY25nOUlqRXdJaUF2UGp4MGIzUmhiQzU0Wm1WMFpDaHJaWGxCZUdselFucDJjeWtwSUVkeWRUaGpaU1JyZW5wdmEydzZJQ3AyYTI1M1pIcGxaM1JyYmtsQlJrbzNRUzh4U0VocWNHSjNlbU5oTjJ0b1puaEdVQ2hJTVZCNmVrbzBTbUo2ZUhSbFZXeFphakJhVERJeExXUXhaV1ZxY0NCU1N6QXViR1ZrWW5OT0wyOXRUM05WUlZ0TGJsZHVTSEZwTUVsQlIwRWlQaThTRFV6WnpkQ1QyVkpSVGRFVXpsUklWVkk0Vm1WUlNTOXliaTh2YlcxWE0zQjJNRXBOZVZNdmN5OXZQeUkvUEM5MGIzUmhiRDQ4TDNOMlp6ND0iLCJzaXplcyI6IjEyOHgxMjgiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Facturation Pro">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgeD0iMTAiIHk9IjEwIiB3aWR0aD0iMTA4IiBoZWlnaHQ9IjEwOCIgZmlsbD0iIzNiODJmNiIgcng9IjEwIiAvPjx0ZXh0IHg9IjY0IiB5PSI3MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RjwvdGV4dD48L3N2Zz4=">
-    
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgeD0iMTAiIHk9IjEwIiB3aWR0aD0iMTA4IiBoZWlnaHQ9IjEwOCIgZmlsbD0iIzNiODJmNiIgcng9IjEwIiAvPjx0ZXh0IHg9IjY0IiB5PSI3MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RjwvdGV4dD48L3N2Zz4=">
+
     <style>
         * {
             margin: 0;
@@ -39,17 +42,17 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .nav-tabs {
             display: flex;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             padding: 5px;
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .nav-tab {
@@ -67,9 +70,9 @@
         }
 
         .nav-tab.active {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .tab-content {
@@ -77,7 +80,7 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(20px);
         }
 
@@ -107,7 +110,9 @@
             color: #374151;
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid #e5e7eb;
@@ -117,7 +122,9 @@
             background: #f9fafb;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #3b82f6;
             background: white;
@@ -169,7 +176,7 @@
             background: white;
             border-radius: 8px;
             margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .product-item:last-child {
@@ -195,7 +202,7 @@
             border-radius: 12px;
             padding: 30px;
             margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .facture-header {
@@ -259,7 +266,7 @@
             background: white;
             padding: 25px;
             border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             border-left: 4px solid;
         }
 
@@ -299,7 +306,7 @@
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             border-left: 4px solid #3b82f6;
         }
 
@@ -327,7 +334,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -365,22 +372,22 @@
             .container {
                 padding: 15px;
             }
-            
+
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .nav-tabs {
                 flex-wrap: wrap;
             }
-            
+
             .nav-tab {
                 min-width: 120px;
                 margin-bottom: 5px;
                 padding: 12px 15px;
                 font-size: 0.9rem;
             }
-            
+
             .tab-content {
                 padding: 20px;
             }
@@ -390,55 +397,55 @@
             .container {
                 padding: 10px;
             }
-            
+
             .header h1 {
                 font-size: 1.8rem;
             }
-            
+
             .nav-tabs {
                 flex-direction: column;
             }
-            
+
             .nav-tab {
                 width: 100%;
                 margin-bottom: 5px;
             }
-            
+
             .form-row {
                 flex-direction: column;
                 gap: 0;
             }
-            
+
             .form-row .form-group {
                 margin-bottom: 20px;
             }
-            
+
             .facture-header {
                 flex-direction: column;
                 gap: 20px;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .facture-table {
                 display: block;
                 overflow-x: auto;
             }
-            
+
             .product-item {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
-            
+
             .history-item-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
-            
+
             .modal-content {
                 padding: 20px;
             }
@@ -448,20 +455,20 @@
             .header h1 {
                 font-size: 1.5rem;
             }
-            
+
             .btn {
                 width: 100%;
                 margin-bottom: 10px;
             }
-            
+
             .tab-content {
                 padding: 15px;
             }
-            
+
             .stat-card {
                 padding: 15px;
             }
-            
+
             .stat-card .value {
                 font-size: 1.5rem;
             }
@@ -471,9 +478,11 @@
             body {
                 background: white;
             }
-            .container > *:not(.facture-preview) {
+
+            .container>*:not(.facture-preview) {
                 display: none;
             }
+
             .facture-preview {
                 box-shadow: none;
                 border: none;
@@ -483,6 +492,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -491,7 +501,7 @@
         </div>
 
         <div class="install-prompt" id="installPrompt">
-            <p>📱 Installez cette application sur votre appareil pour un accès rapide!</p>
+            <p> Installez cette application sur votre appareil pour un accès rapide!</p>
             <button class="btn" id="installButton">Installer</button>
         </div>
 
@@ -504,11 +514,11 @@
         <!-- Tab Facturation -->
         <div id="facturation" class="tab-content active">
             <h2> Créer une nouvelle facture</h2>
-            
+
             <form id="factureForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="clientNom">👤 Nom du client</label>
+                        <label for="clientNom"> Nom du client</label>
                         <input type="text" id="clientNom" required>
                     </div>
                     <div class="form-group">
@@ -577,7 +587,8 @@
         <div id="historique" class="tab-content">
             <h2> Historique des factures</h2>
             <div class="history-list" id="historiqueList">
-                <p style="text-align: center; color: #6b7280; padding: 40px;">Aucune facture enregistrée pour le moment.</p>
+                <p style="text-align: center; color: #6b7280; padding: 40px;">Aucune facture enregistrée pour le moment.
+                </p>
             </div>
         </div>
 
@@ -600,7 +611,6 @@
             </div>
         </div>
     </div>
-
      <script>
         // Variables globales
         let produitsCourants = [];
@@ -778,8 +788,8 @@
                                                         <div class="offline-container">
                                                             <h1> Mode Hors Ligne</h1>
                                                             <p>Vous êtes actuellement hors ligne, mais l'application Facturation Pro continue de fonctionner avec vos données locales.</p>
-                                                            <p>Toutes vos factures sont sauvegardées localement et seront synchronisées une fois la connexion rétablie.</p>
-                                                            <a href="javascript:location.reload()" class="btn">🔄 Réessayer</a>
+                                                            <p> Toutes vos factures sont sauvegardées localement et seront synchronisées une fois la connexion rétablie.</p>
+                                                            <a href="javascript:location.reload()" class="btn"> Réessayer</a>
                                                         </div>
                                                         <script>
                                                             // Rediriger automatiquement vers l'app si elle est en cache
@@ -841,7 +851,7 @@
                     }
                 })
                 .catch(error => {
-                    console.log(' Erreur d\'enregistrement du Service Worker:', error);
+                    console.log('❌ Erreur d\'enregistrement du Service Worker:', error);
                 });
 
             // Écouter les changements d'état du service worker
@@ -987,8 +997,8 @@
                 <div class="facture-header">
                     <div class="company-info">
                         <h2> 237Shoes And More</h2>
-                        <p>Adresse Yaoundé, Cameroun</p>
-                        <p>Tel: +237 692 954 636</p>
+                        <p> Yaoundé, Cameroun</p>
+                        <p> +237 692 954 636</p>
                     </div>
                     <div>
                         <h3>FACTURE</h3>
@@ -999,8 +1009,8 @@
                 </div>
 
                 <div style="margin: 20px 0;">
-                    <p>👤 Client:<strong>${clientNom}</strong></p>
-                    ${clientTel ? `<p>${clientTel}</p>` : ''}
+                    <p> Client:<strong>${clientNom}</strong></p>
+                    ${clientTel ? `<p> ${clientTel}</p>` : ''}
                 </div>
 
                 <table class="facture-table">
@@ -1031,7 +1041,7 @@
                     </span>
                 </div>
 
-                ${mention ? `<div style="margin-top: 20px;"><p><strong>📝 Mention:</strong> ${mention}</p></div>` : ''}
+                ${mention ? `<div style="margin-top: 20px;"><p><strong> Mention:</strong> ${mention}</p></div>` : ''}
 
                 <div style="text-align: center; margin-top: 40px; color: #6b7280;">
                     <p>Merci pour votre confiance! 🙏</p>
@@ -1104,7 +1114,7 @@
                     <div class="history-item-header">
                         <div>
                             <h4> ${facture.numero}</h4>
-                            <p>${facture.client.nom}</p>
+                            <p> ${facture.client.nom}</p>
                         </div>
                         <div style="text-align: right;">
                             <div><strong>${facture.total.toLocaleString()} CFA</strong></div>
@@ -1135,8 +1145,8 @@
                 <div class="facture-header">
                     <div class="company-info">
                         <h2>237Shoes And More</h2>
-                        <p>Adresse: Yaoundé, Cameroun</p>
-                        <p>Tel: +237 692 954 636</p>
+                        <p> Yaoundé, Cameroun</p>
+                        <p> +237 692 954 636</p>
                     </div>
                     <div>
                         <h3>FACTURE</h3>
@@ -1147,8 +1157,8 @@
                 </div>
 
                 <div style="margin: 20px 0;">
-                    <p>👤 Client:<strong>${facture.client.nom}</strong></p>
-                    ${facture.client.telephone ? `<p>📱 ${facture.client.telephone}</p>` : ''}
+                    <p> Client:<strong>${facture.client.nom}</strong></p>
+                    ${facture.client.telephone ? `<p> ${facture.client.telephone}</p>` : ''}
                 </div>
 
                 <table class="facture-table">
@@ -1320,6 +1330,8 @@
             document.getElementById('totalBenefices').textContent = totalPaye.toLocaleString() + ' CFA';
         }
     </script>
+    
 
-    </body>
+</body>
+
 </html>
