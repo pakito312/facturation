@@ -63,6 +63,7 @@
             transition: all 0.3s ease;
             font-size: 1rem;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .nav-tab.active {
@@ -319,31 +320,150 @@
             display: none;
         }
 
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            width: 100%;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tab {
+                min-width: 120px;
+                margin-bottom: 5px;
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
             }
-
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
             .nav-tabs {
-                flex-wrap: wrap;
-            }
-
-            .nav-tab {
-                min-width: 120px;
-                margin-bottom: 5px;
-            }
-
-            .form-row {
                 flex-direction: column;
             }
-
+            
+            .nav-tab {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-row .form-group {
+                margin-bottom: 20px;
+            }
+            
             .facture-header {
                 flex-direction: column;
                 gap: 20px;
             }
-
+            
             .stats-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .facture-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .product-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .history-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-card .value {
+                font-size: 1.5rem;
             }
         }
 
@@ -357,6 +477,8 @@
             .facture-preview {
                 box-shadow: none;
                 border: none;
+                padding: 0;
+                margin: 0;
             }
         }
     </style>
@@ -364,24 +486,24 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>💼 Facturation Pro</h1>
+            <h1> Facturation Pro</h1>
             <p>Gérez vos factures en toute simplicité</p>
         </div>
 
         <div class="install-prompt" id="installPrompt">
             <p>📱 Installez cette application sur votre appareil pour un accès rapide!</p>
-            <button class="btn" onclick="installApp()">Installer</button>
+            <button class="btn" id="installButton">Installer</button>
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('facturation')">📄 Nouvelle Facture</button>
-            <button class="nav-tab" onclick="showTab('historique')">📚 Historique</button>
-            <button class="nav-tab" onclick="showTab('statistiques')">📊 Statistiques</button>
+            <button class="nav-tab active" data-tab="facturation"> Nouvelle Facture</button>
+            <button class="nav-tab" data-tab="historique"> Historique</button>
+            <button class="nav-tab" data-tab="statistiques"> Statistiques</button>
         </div>
 
         <!-- Tab Facturation -->
         <div id="facturation" class="tab-content active">
-            <h2>✨ Créer une nouvelle facture</h2>
+            <h2> Créer une nouvelle facture</h2>
             
             <form id="factureForm">
                 <div class="form-row">
@@ -390,70 +512,70 @@
                         <input type="text" id="clientNom" required>
                     </div>
                     <div class="form-group">
-                        <label for="clientTel">📱 Téléphone (optionnel)</label>
+                        <label for="clientTel"> Téléphone (optionnel)</label>
                         <input type="tel" id="clientTel">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="produitNom">🛍️ Nom du produit</label>
+                    <label for="produitNom"> Nom du produit</label>
                     <input type="text" id="produitNom" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="quantite">📦 Quantité</label>
+                        <label for="quantite"> Quantité</label>
                         <input type="number" id="quantite" min="1" value="1" required>
                     </div>
                     <div class="form-group">
-                        <label for="prixUnitaire">💰 Prix unitaire (CFA)</label>
+                        <label for="prixUnitaire"> Prix unitaire (CFA)</label>
                         <input type="number" id="prixUnitaire" min="0" step="0.01" required>
                     </div>
                 </div>
 
-                <button type="button" class="btn" onclick="ajouterProduit()">➕ Ajouter Produit</button>
+                <button type="button" class="btn" id="addProductBtn"> Ajouter Produit</button>
             </form>
 
             <div class="products-list" id="produitsListe" style="display: none;">
                 <h3>🛒 Produits ajoutés</h3>
                 <div id="produitsItems"></div>
                 <div class="total-section">
-                    <h3>💳 Total: <span id="totalGeneral">0</span> CFA</h3>
+                    <h3> Total: <span id="totalGeneral">0</span> CFA</h3>
                 </div>
             </div>
 
             <div class="form-group" style="margin-top: 20px;">
-                <label for="mention">📝 Mention (optionnel)</label>
+                <label for="mention"> Mention (optionnel)</label>
                 <textarea id="mention" rows="3" placeholder="Remarques ou conditions particulières..."></textarea>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="statut">💳 Statut de paiement</label>
+                    <label for="statut"> Statut de paiement</label>
                     <select id="statut">
-                        <option value="paye">✅ Payé</option>
-                        <option value="dette">⚠️ Dette</option>
+                        <option value="paye"> Payé</option>
+                        <option value="dette"> Dette</option>
                     </select>
                 </div>
             </div>
 
             <div style="margin-top: 30px;">
-                <button type="button" class="btn" onclick="genererFacture()">📄 Générer Facture</button>
-                <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 Recommencer</button>
+                <button type="button" class="btn" id="generateInvoiceBtn"> Générer Facture</button>
+                <button type="button" class="btn btn-secondary" id="resetFormBtn"> Recommencer</button>
             </div>
 
             <div id="facturePreview" style="display: none;">
                 <div class="facture-preview" id="factureContent">
                     <!-- Le contenu de la facture sera généré ici -->
                 </div>
-                <button type="button" class="btn btn-success" onclick="sauvegarderFacture()">💾 Sauvegarder</button>
-                <button type="button" class="btn" onclick="imprimerFacture()">🖨️ Imprimer</button>
+                <button type="button" class="btn btn-success" id="saveInvoiceBtn"> Sauvegarder</button>
+                <button type="button" class="btn" id="printInvoiceBtn"> Imprimer</button>
             </div>
         </div>
 
         <!-- Tab Historique -->
         <div id="historique" class="tab-content">
-            <h2>📚 Historique des factures</h2>
+            <h2> Historique des factures</h2>
             <div class="history-list" id="historiqueList">
                 <p style="text-align: center; color: #6b7280; padding: 40px;">Aucune facture enregistrée pour le moment.</p>
             </div>
@@ -461,33 +583,272 @@
 
         <!-- Tab Statistiques -->
         <div id="statistiques" class="tab-content">
-            <h2>📊 Récapitulatif des ventes</h2>
+            <h2> Récapitulatif des ventes</h2>
             <div class="stats-grid" id="statsGrid">
                 <div class="stat-card ventes">
-                    <h3>💰 Total Ventes</h3>
+                    <h3> Total Ventes</h3>
                     <div class="value" id="totalVentes">0 CFA</div>
                 </div>
                 <div class="stat-card dettes">
-                    <h3>⚠️ Total Dettes</h3>
+                    <h3> Total Dettes</h3>
                     <div class="value" id="totalDettes">0 CFA</div>
                 </div>
                 <div class="stat-card benefices">
-                    <h3>📈 Bénéfices Nets</h3>
+                    <h3> Bénéfices Nets</h3>
                     <div class="value" id="totalBenefices">0 CFA</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
+     <script>
         // Variables globales
         let produitsCourants = [];
         let deferredPrompt;
         let factures = JSON.parse(localStorage.getItem('factures') || '[]');
 
+        // Initialisation après le chargement du DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les écouteurs d'événements
+            initEventListeners();
+            
+            // Calculer les statistiques initiales
+            calculerStatistiques();
+        });
+
+        // Initialiser tous les écouteurs d'événements
+        function initEventListeners() {
+            // Navigation par onglets
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    showTab(this.dataset.tab);
+                });
+            });
+            
+            // Boutons d'action
+            document.getElementById('addProductBtn').addEventListener('click', ajouterProduit);
+            document.getElementById('generateInvoiceBtn').addEventListener('click', genererFacture);
+            document.getElementById('resetFormBtn').addEventListener('click', resetForm);
+            document.getElementById('saveInvoiceBtn').addEventListener('click', sauvegarderFacture);
+            document.getElementById('printInvoiceBtn').addEventListener('click', imprimerFacture);
+            document.getElementById('installButton').addEventListener('click', installApp);
+            
+            // Gestion de la soumission du formulaire
+            document.getElementById('factureForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+        }
+
         // Service Worker pour PWA
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbCgKICAgIGNhY2hlcy5vcGVuKCdmYWN0dXJhdGlvbi12MScpLnRoZW4oY2FjaGUgPT4gewogICAgICByZXR1cm4gY2FjaGUuYWRkQWxsKFsnLyddKTsKICAgIH0pCiAgKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4gewogIGV2ZW50LnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpLnRoZW4ocmVzcG9uc2UgPT4gewogICAgICByZXR1cm4gcmVzcG9uc2UgfHwgZmV0Y2goZXZlbnQucmVxdWVzdCk7CiAgICB9KQogICk7Cn0pOw==');
+            // Créer le service worker dynamiquement
+            const swCode = `
+                const CACHE_NAME = 'facturation-pro-v1';
+                const OFFLINE_URL = '/offline.html';
+
+                // Installation du Service Worker
+                self.addEventListener('install', event => {
+                    console.log('Service Worker: Installing...');
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then(cache => {
+                                console.log('Service Worker: Caching files');
+                                // Cache la page actuelle et les ressources essentielles
+                                return cache.addAll([
+                                    '/',
+                                    '/index.html',
+                                    'data:text/html,<html><head><title>Hors ligne</title></head><body><h1>Application hors ligne</h1><p>Vous êtes actuellement hors ligne. L\\'application fonctionne en mode local.</p></body></html>'
+                                ]).catch(err => {
+                                    console.log('Service Worker: Cache addAll failed', err);
+                                });
+                            })
+                            .then(() => {
+                                console.log('Service Worker: Installed');
+                                // Force l'activation immédiate
+                                return self.skipWaiting();
+                            })
+                    );
+                });
+
+                // Activation du Service Worker
+                self.addEventListener('activate', event => {
+                    console.log('Service Worker: Activating...');
+                    event.waitUntil(
+                        caches.keys()
+                            .then(cacheNames => {
+                                return Promise.all(
+                                    cacheNames.map(cacheName => {
+                                        if (cacheName !== CACHE_NAME) {
+                                            console.log('Service Worker: Clearing old cache:', cacheName);
+                                            return caches.delete(cacheName);
+                                        }
+                                    })
+                                );
+                            })
+                            .then(() => {
+                                console.log('Service Worker: Activated');
+                                // Prendre le contrôle immédiatement
+                                return self.clients.claim();
+                            })
+                    );
+                });
+
+                // Interception des requêtes réseau
+                self.addEventListener('fetch', event => {
+                    // Stratégie: Cache First avec fallback
+                    if (event.request.destination === 'document' || 
+                        event.request.destination === 'script' ||
+                        event.request.destination === 'style' ||
+                        event.request.url.includes('localhost') ||
+                        event.request.url.includes('127.0.0.1') ||
+                        event.request.url.includes('file://')) {
+                        
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(cachedResponse => {
+                                    if (cachedResponse) {
+                                        console.log('Service Worker: Serving from cache:', event.request.url);
+                                        return cachedResponse;
+                                    }
+
+                                    // Si pas en cache, essayer le réseau
+                                    return fetch(event.request)
+                                        .then(networkResponse => {
+                                            // Mettre en cache la réponse pour les prochaines fois
+                                            if (networkResponse && networkResponse.status === 200) {
+                                                const responseClone = networkResponse.clone();
+                                                caches.open(CACHE_NAME)
+                                                    .then(cache => {
+                                                        cache.put(event.request, responseClone);
+                                                    });
+                                            }
+                                            return networkResponse;
+                                        })
+                                        .catch(err => {
+                                            console.log('Service Worker: Network fetch failed, serving offline page');
+                                            // En cas d'échec réseau, retourner une page hors ligne
+                                            if (event.request.destination === 'document') {
+                                                return new Response(
+                                                    \`<!DOCTYPE html>
+                                                    <html lang="fr">
+                                                    <head>
+                                                        <meta charset="UTF-8">
+                                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                        <title>Facturation Pro - Hors ligne</title>
+                                                        <style>
+                                                            body {
+                                                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                                                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                                                min-height: 100vh;
+                                                                display: flex;
+                                                                align-items: center;
+                                                                justify-content: center;
+                                                                margin: 0;
+                                                                color: white;
+                                                                text-align: center;
+                                                                padding: 20px;
+                                                            }
+                                                            .offline-container {
+                                                                background: rgba(255,255,255,0.1);
+                                                                border-radius: 20px;
+                                                                padding: 40px;
+                                                                backdrop-filter: blur(10px);
+                                                                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                                                                max-width: 500px;
+                                                            }
+                                                            h1 { font-size: 2.5rem; margin-bottom: 20px; }
+                                                            p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
+                                                            .btn {
+                                                                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                                                                color: white;
+                                                                border: none;
+                                                                padding: 12px 24px;
+                                                                border-radius: 12px;
+                                                                cursor: pointer;
+                                                                font-size: 1rem;
+                                                                font-weight: 600;
+                                                                text-decoration: none;
+                                                                display: inline-block;
+                                                                transition: transform 0.3s ease;
+                                                            }
+                                                            .btn:hover { transform: translateY(-2px); }
+                                                        </style>
+                                                    </head>
+                                                    <body>
+                                                        <div class="offline-container">
+                                                            <h1> Mode Hors Ligne</h1>
+                                                            <p>Vous êtes actuellement hors ligne, mais l'application Facturation Pro continue de fonctionner avec vos données locales.</p>
+                                                            <p>Toutes vos factures sont sauvegardées localement et seront synchronisées une fois la connexion rétablie.</p>
+                                                            <a href="javascript:location.reload()" class="btn">🔄 Réessayer</a>
+                                                        </div>
+                                                        <script>
+                                                            // Rediriger automatiquement vers l'app si elle est en cache
+                                                            setTimeout(() => {
+                                                                if (navigator.onLine) {
+                                                                    location.reload();
+                                                                }
+                                                            }, 3000);
+                                                        </script>
+                                                    </body>
+                                                    </html>\`,
+                                                    {
+                                                        headers: {
+                                                            'Content-Type': 'text/html'
+                                                        }
+                                                    }
+                                                );
+                                            }
+                                            return new Response('Offline', { status: 503 });
+                                        });
+                                })
+                        );
+                    }
+                });
+
+                // Messages du client principal
+                self.addEventListener('message', event => {
+                    if (event.data && event.data.type === 'SKIP_WAITING') {
+                        self.skipWaiting();
+                    }
+                });
+            `;
+
+            // Convertir le code en blob et l'enregistrer
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(swBlob);
+
+            navigator.serviceWorker.register(swUrl)
+                .then(registration => {
+                    console.log(' Service Worker enregistré avec succès:', registration);
+                    
+                    // Gérer les mises à jour du service worker
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // Nouveau service worker disponible
+                                if (confirm(' Une nouvelle version de l\'application est disponible. Voulez-vous la charger ?')) {
+                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    });
+
+                    // Si le service worker devient actif
+                    if (registration.active) {
+                        console.log('Service Worker actif');
+                    }
+                })
+                .catch(error => {
+                    console.log(' Erreur d\'enregistrement du Service Worker:', error);
+                });
+
+            // Écouter les changements d'état du service worker
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('Service Worker: Controller changed, reloading...');
+                window.location.reload();
+            });
         }
 
         // PWA Installation
@@ -523,7 +884,9 @@
 
             // Afficher le contenu sélectionné
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            
+            // Activer le bouton correspondant
+            document.querySelector(`.nav-tab[data-tab="${tabName}"]`).classList.add('active');
 
             // Rafraîchir les données selon l'onglet
             if (tabName === 'historique') {
@@ -558,6 +921,9 @@
             document.getElementById('produitNom').value = '';
             document.getElementById('quantite').value = '1';
             document.getElementById('prixUnitaire').value = '';
+            
+            // Remettre le focus sur le nom du produit
+            document.getElementById('produitNom').focus();
         }
 
         // Afficher la liste des produits
@@ -620,9 +986,9 @@
             const factureHTML = `
                 <div class="facture-header">
                     <div class="company-info">
-                        <h2>🏢 Mon Entreprise</h2>
-                        <p>📍 Yaoundé, Cameroun</p>
-                        <p>📱 +237 XXX XXX XXX</p>
+                        <h2> 237Shoes And More</h2>
+                        <p>Adresse Yaoundé, Cameroun</p>
+                        <p>Tel: +237 692 954 636</p>
                     </div>
                     <div>
                         <h3>FACTURE</h3>
@@ -633,9 +999,8 @@
                 </div>
 
                 <div style="margin: 20px 0;">
-                    <h4>👤 Client:</h4>
-                    <p><strong>${clientNom}</strong></p>
-                    ${clientTel ? `<p>📱 ${clientTel}</p>` : ''}
+                    <p>👤 Client:<strong>${clientNom}</strong></p>
+                    ${clientTel ? `<p>${clientTel}</p>` : ''}
                 </div>
 
                 <table class="facture-table">
@@ -660,9 +1025,9 @@
                 </table>
 
                 <div style="text-align: right; margin: 20px 0;">
-                    <h3>💰 TOTAL: ${total.toLocaleString()} CFA</h3>
+                    <h3> TOTAL: ${total.toLocaleString()} CFA</h3>
                     <span class="status-badge ${statut === 'paye' ? 'status-paye' : 'status-dette'}">
-                        ${statut === 'paye' ? '✅ PAYÉ' : '⚠️ DETTE'}
+                        ${statut === 'paye' ? ' PAYÉ' : ' DETTE'}
                     </span>
                 </div>
 
@@ -705,7 +1070,7 @@
             factures.push(facture);
             localStorage.setItem('factures', JSON.stringify(factures));
             
-            alert('✅ Facture sauvegardée avec succès!');
+            alert(' Facture sauvegardée avec succès!');
             resetForm();
         }
 
@@ -738,24 +1103,24 @@
                 <div class="history-item">
                     <div class="history-item-header">
                         <div>
-                            <h4>📄 ${facture.numero}</h4>
-                            <p>👤 ${facture.client.nom}</p>
+                            <h4> ${facture.numero}</h4>
+                            <p>${facture.client.nom}</p>
                         </div>
                         <div style="text-align: right;">
                             <div><strong>${facture.total.toLocaleString()} CFA</strong></div>
                             <span class="status-badge ${facture.statut === 'paye' ? 'status-paye' : 'status-dette'}">
-                                ${facture.statut === 'paye' ? '✅ PAYÉ' : '⚠️ DETTE'}
+                                ${facture.statut === 'paye' ? ' PAYÉ' : ' DETTE'}
                             </span>
                         </div>
                     </div>
                     <div style="font-size: 0.9rem; color: #6b7280;">
-                        📅 ${facture.date} à ${facture.heure}<br>
-                        🛍️ ${facture.produits.length} produit(s)
-                        ${facture.mention ? `<br>📝 ${facture.mention}` : ''}
+                         ${facture.date} à ${facture.heure}<br>
+                         ${facture.produits.length} produit(s)
+                        ${facture.mention ? `<br> ${facture.mention}` : ''}
                     </div>
                     <div style="margin-top: 10px;">
-                        <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="voirFacture('${facture.numero}')">👁️ Voir</button>
-                        <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem; margin-left: 5px;" onclick="supprimerFacture('${facture.numero}')">🗑️ Supprimer</button>
+                        <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="voirFacture('${facture.numero}')"> Voir</button>
+                        <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem; margin-left: 5px;" onclick="supprimerFacture('${facture.numero}')"> Supprimer</button>
                     </div>
                 </div>
             `).join('');
@@ -769,9 +1134,9 @@
             const factureHTML = `
                 <div class="facture-header">
                     <div class="company-info">
-                        <h2>🏢 Mon Entreprise</h2>
-                        <p>📍 Yaoundé, Cameroun</p>
-                        <p>📱 +237 XXX XXX XXX</p>
+                        <h2>237Shoes And More</h2>
+                        <p>Adresse: Yaoundé, Cameroun</p>
+                        <p>Tel: +237 692 954 636</p>
                     </div>
                     <div>
                         <h3>FACTURE</h3>
@@ -782,8 +1147,7 @@
                 </div>
 
                 <div style="margin: 20px 0;">
-                    <h4>👤 Client:</h4>
-                    <p><strong>${facture.client.nom}</strong></p>
+                    <p>👤 Client:<strong>${facture.client.nom}</strong></p>
                     ${facture.client.telephone ? `<p>📱 ${facture.client.telephone}</p>` : ''}
                 </div>
 
@@ -809,13 +1173,13 @@
                 </table>
 
                 <div style="text-align: right; margin: 20px 0;">
-                    <h3>💰 TOTAL: ${facture.total.toLocaleString()} CFA</h3>
+                    <h3> TOTAL: ${facture.total.toLocaleString()} CFA</h3>
                     <span class="status-badge ${facture.statut === 'paye' ? 'status-paye' : 'status-dette'}">
-                        ${facture.statut === 'paye' ? '✅ PAYÉ' : '⚠️ DETTE'}
+                        ${facture.statut === 'paye' ? ' PAYÉ' : ' DETTE'}
                     </span>
                 </div>
 
-                ${facture.mention ? `<div style="margin-top: 20px;"><p><strong>📝 Mention:</strong> ${facture.mention}</p></div>` : ''}
+                ${facture.mention ? `<div style="margin-top: 20px;"><p><strong> Mention:</strong> ${facture.mention}</p></div>` : ''}
 
                 <div style="text-align: center; margin-top: 40px; color: #6b7280;">
                     <p>Merci pour votre confiance! 🙏</p>
@@ -824,37 +1188,37 @@
 
             // Afficher la facture dans une modal
             const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-                padding: 20px;
-            `;
-
+            modal.className = 'modal';
             modal.innerHTML = `
-                <div style="background: white; border-radius: 20px; padding: 30px; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; width: 100%;">
-                    <button onclick="this.closest('div').parentElement.remove()" style="position: absolute; top: 15px; right: 15px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 16px;">✕</button>
+                <div class="modal-content">
+                    <button class="close-modal">&times;</button>
                     ${factureHTML}
                     <div style="text-align: center; margin-top: 30px;">
-                        <button onclick="imprimerFactureModal()" class="btn" style="margin-right: 10px;">🖨️ Imprimer</button>
-                        <button onclick="this.closest('div').parentElement.remove()" class="btn btn-secondary">❌ Fermer</button>
+                        <button class="btn" id="printModalBtn" style="margin-right: 10px;">🖨️ Imprimer</button>
+                        <button class="btn btn-secondary" id="closeModalBtn">❌ Fermer</button>
                     </div>
                 </div>
             `;
 
             document.body.appendChild(modal);
+            
+            // Ajouter les gestionnaires d'événements pour la modal
+            document.querySelector('.close-modal').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            document.getElementById('closeModalBtn').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            document.getElementById('printModalBtn').addEventListener('click', () => {
+                imprimerFactureModal(modal);
+            });
         }
 
         // Imprimer facture depuis la modal
-        function imprimerFactureModal() {
-            const modalContent = document.querySelector('div[style*="position: fixed"] > div');
+        function imprimerFactureModal(modal) {
+            const modalContent = modal.querySelector('.modal-content');
             const printContent = modalContent.cloneNode(true);
             
             // Supprimer les boutons d'action
@@ -934,84 +1298,6 @@
             }, 100);
         }
 
-        // Imprimer la facture depuis l'onglet facturation
-        function imprimerFacture() {
-            const factureContent = document.getElementById('factureContent');
-            if (!factureContent) return;
-            
-            // Créer une zone d'impression temporaire
-            const printArea = document.createElement('div');
-            printArea.id = 'printArea';
-            printArea.style.cssText = `
-                position: fixed;
-                top: -9999px;
-                left: -9999px;
-                width: 210mm;
-                background: white;
-                padding: 20px;
-                font-family: Arial, sans-serif;
-            `;
-            printArea.innerHTML = factureContent.innerHTML;
-            document.body.appendChild(printArea);
-            
-            // Ajouter les styles d'impression
-            const printStyles = document.createElement('style');
-            printStyles.innerHTML = `
-                @media print {
-                    body * { visibility: hidden; }
-                    #printArea, #printArea * { visibility: visible; }
-                    #printArea {
-                        position: static !important;
-                        top: 0 !important;
-                        left: 0 !important;
-                        width: 100% !important;
-                        height: 100% !important;
-                        margin: 0 !important;
-                        padding: 20px !important;
-                    }
-                    .facture-header { 
-                        display: flex; 
-                        justify-content: space-between; 
-                        margin-bottom: 20px; 
-                        border-bottom: 2px solid #000; 
-                        padding-bottom: 20px; 
-                    }
-                    .facture-table { 
-                        width: 100%; 
-                        border-collapse: collapse; 
-                        margin: 20px 0; 
-                    }
-                    .facture-table th, .facture-table td { 
-                        padding: 10px; 
-                        text-align: left; 
-                        border-bottom: 1px solid #000; 
-                    }
-                    .facture-table th { 
-                        background: #f5f5f5; 
-                        font-weight: bold;
-                    }
-                    .status-badge { 
-                        padding: 5px 10px; 
-                        border: 2px solid #000;
-                        border-radius: 15px; 
-                        font-size: 0.9rem; 
-                        font-weight: bold; 
-                    }
-                }
-            `;
-            document.head.appendChild(printStyles);
-            
-            // Lancer l'impression
-            setTimeout(() => {
-                window.print();
-                // Nettoyer après impression
-                setTimeout(() => {
-                    document.body.removeChild(printArea);
-                    document.head.removeChild(printStyles);
-                }, 100);
-            }, 100);
-        }
-
         // Supprimer une facture
         function supprimerFacture(numero) {
             if (confirm('Êtes-vous sûr de vouloir supprimer cette facture?')) {
@@ -1019,7 +1305,7 @@
                 localStorage.setItem('factures', JSON.stringify(factures));
                 chargerHistorique();
                 calculerStatistiques();
-                alert('✅ Facture supprimée!');
+                alert(' Facture supprimée!');
             }
         }
 
@@ -1033,9 +1319,7 @@
             document.getElementById('totalDettes').textContent = totalDettes.toLocaleString() + ' CFA';
             document.getElementById('totalBenefices').textContent = totalPaye.toLocaleString() + ' CFA';
         }
-
-        // Initialisation au chargement de la page
-        document.addEventListener('DOMContentLoaded', function() {
-            calculerStatistiques();
-        });
     </script>
+
+    </body>
+</html>
