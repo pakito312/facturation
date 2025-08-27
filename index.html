@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Facturation PWA">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzAiIGZpbGw9IiMwMDUzOTUiLz4KPHBhdGggZD0iTTg0IDEzMkM4NCAxMjQuODA1IDg5LjgwNDMgMTE5IDk3IDExOUMxMDQuMTk2IDExOSAxMTAgMTI0LjgwNSAxMTAgMTMyQzExMCAxMzkuMTk2IDEwNC4xOTYgMTQ1IDk3IDE0NUM4OS44MDQzIDE0NSA4NCAxMzkuMTk2IDg0IDEzMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05NyA1NEM5NyA1NCA4MiA1NCA4MiA3MEM4MiA4NiA5NyAxMDMuODMgOTcgMTAzLjgzQzk3IDEwMy44MyAxMTIgODYgMTEyIDcwQzExMiA1NCA5NyA1NCA5NyA1NFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNDAgMTQwVjE1Nkg1NFYxNDBIMTQwWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+">
+    <title>Facturation PWA</title>
+    <style>
+        :root {
+            --primary: #005395;
+            --secondary: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 15px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background-color: var(--primary);
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        .nav-tab {
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            flex-grow: 1;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-tab.active {
+            border-bottom: 3px solid white;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button.secondary {
+            background-color: var(--secondary);
+        }
+        
+        button.danger {
+            background-color: var(--danger);
+        }
+        
+        button.warning {
+            background-color: var(--warning);
+        }
+        
+        .product-list {
+            margin-top: 15px;
+        }
+        
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-card {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        th {
+            background-color: var(--light);
+        }
+        
+        .invoice-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-items {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .status-paid {
+            background-color: #e8f5e9;
+            color: var(--secondary);
+        }
+        
+        .status-debt {
+            background-color: #ffebee;
+            color: var(--danger);
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .invoice-print, .invoice-print * {
+                visibility: visible;
+            }
+            .invoice-print {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 970px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1170px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Facturation PWA</h1>
+    </header>
+    
+    <div class="container">
+        <div class="nav-tabs">
+            <a href="#" class="nav-tab active" data-tab="facturation">Facturation</a>
+            <a href="#" class="nav-tab" data-tab="historique">Historique</a>
+            <a href="#" class="nav-tab" data-tab="statistiques">Statistiques</a>
+        </div>
+        
+        <!-- Facturation Tab -->
+        <div id="facturation" class="tab-content active">
+            <div class="card">
+                <h2>Nouvelle Facture</h2>
+                
+                <div class="form-group">
+                    <label for="client">Nom du client</label>
+                    <input type="text" id="client" placeholder="Nom du client">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mention">Mention spéciale</label>
+                    <textarea id="mention" placeholder="Mention spéciale (optionnel)"></textarea>
+                </div>
+                
+                <h3>Ajouter un produit</h3>
+                <div class="form-group">
+                    <label for="produit">Nom du produit</label>
+                    <input type="text" id="produit" placeholder="Nom du produit">
+                </div>
+                
+                <div class="form-group">
+                    <label for="prix">Prix unitaire</label>
+                    <input type="number" id="prix" placeholder="Prix" min="0" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantite">Quantité</label>
+                    <input type="number" id="quantite" placeholder="Quantité" min="1" value="1">
+                </div>
+                
+                <button id="ajouter-produit" class="secondary">Ajouter le produit</button>
+            </div>
+            
+            <div class="card">
+                <h3>Produits ajoutés</h3>
+                <div id="liste-produits" class="product-list">
+                    <p>Aucun produit ajouté</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="statut-paiement">Statut de paiement</label>
+                    <select id="statut-paiement">
+                        <option value="paye">Payé</option>
+                        <option value="dette">Dette</option>
+                    </select>
+                </div>
+                
+                <button id="generer-facture">Générer la facture</button>
+            </div>
+            
+            <div id="preview-facture" class="invoice-preview" style="display: none;">
+                <div class="invoice-print">
+                    <div class="invoice-header">
+                        <h2>FACTURE</h2>
+                        <p>Date: <span id="invoice-date"></span></p>
+                    </div>
+                    
+                    <div class="invoice-details">
+                        <div>
+                            <strong>Client:</strong> <span id="invoice-client"></span>
+                        </div>
+                        <div>
+                            <strong>N° Facture:</strong> <span id="invoice-number"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <p><strong>Mention:</strong> <span id="invoice-mention"></span></p>
+                    </div>
+                    
+                    <table class="invoice-items">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Quantité</th>
+                                <th>Prix unitaire</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items-body">
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total">
+                        <p>Total: <span id="invoice-total"></span></p>
+                        <p>Statut: <span id="invoice-status"></span></p>
+                    </div>
+                </div>
+                
+                <button id="imprimer-facture" class="no-print">Imprimer la facture</button>
+                <button id="sauvegarder-facture" class="secondary no-print">Sauvegarder la facture</button>
+            </div>
+        </div>
+        
+        <!-- Historique Tab -->
+        <div id="historique" class="tab-content">
+            <div class="card">
+                <h2>Historique des factures</h2>
+                
+                <div class="form-group">
+                    <input type="text" id="recherche-facture" placeholder="Rechercher une facture...">
+                </div>
+                
+                <div id="liste-factures">
+                    <!-- Les factures seront chargées ici -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistiques Tab -->
+        <div id="statistiques" class="tab-content">
+            <div class="card">
+                <h2>Statistiques des ventes</h2>
+                
+                <div class="summary-card">
+                    <h3>Chiffre d'affaires total</h3>
+                    <p class="summary-value" id="total-ventes">0 €</p>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Total des dettes</h3>
+                    <p class="summary-value" id="total-dettes">0 €</p>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Bénéfice estimé (30%)</h3>
+                    <p class="summary-value" id="total-benefices">0 €</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Dettes en attente</h2>
+                <div id="liste-dettes">
+                    <!-- Les dettes seront chargées ici -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion des onglets
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Désactiver tous les onglets
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                // Activer l'onglet cliqué
+                tab.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Charger les données si nécessaire
+                if (tabId === 'historique') {
+                    chargerHistorique();
+                } else if (tabId === 'statistiques') {
+                    calculerStatistiques();
+                }
+            });
+        });
+        
+        // Variables globales
+        let produits = [];
+        let factures = JSON.parse(localStorage.getItem('factures')) || [];
+        let prochainNumero = Math.max(...factures.map(f => f.numero), 0) + 1;
+        
+        // Ajouter un produit
+        document.getElementById('ajouter-produit').addEventListener('click', () => {
+            const produit = document.getElementById('produit').value;
+            const prix = parseFloat(document.getElementById('prix').value);
+            const quantite = parseInt(document.getElementById('quantite').value);
+            
+            if (!produit || isNaN(prix) || isNaN(quantite)) {
+                alert('Veuillez remplir tous les champs du produit');
+                return;
+            }
+            
+            produits.push({
+                nom: produit,
+                prix: prix,
+                quantite: quantite,
+                total: prix * quantite
+            });
+            
+            mettreAJourListeProduits();
+            
+            // Réinitialiser les champs
+            document.getElementById('produit').value = '';
+            document.getElementById('prix').value = '';
+            document.getElementById('quantite').value = '1';
+        });
+        
+        // Mettre à jour la liste des produits
+        function mettreAJourListeProduits() {
+            const liste = document.getElementById('liste-produits');
+            
+            if (produits.length === 0) {
+                liste.innerHTML = '<p>Aucun produit ajouté</p>';
+                return;
+            }
+            
+            let html = '';
+            produits.forEach((prod, index) => {
+                html += `
+                    <div class="product-item">
+                        <div>${prod.nom} (x${prod.quantite})</div>
+                        <div>${prod.total.toFixed(2)} €</div>
+                        <button onclick="supprimerProduit(${index})" class="danger" style="width: auto; padding: 5px 10px;">X</button>
+                    </div>
+                `;
+            });
+            
+            liste.innerHTML = html;
+        }
+        
+        // Supprimer un produit
+        function supprimerProduit(index) {
+            produits.splice(index, 1);
+            mettreAJourListeProduits();
+        }
+        
+        // Générer une facture
+        document.getElementById('generer-facture').addEventListener('click', () => {
+            if (produits.length === 0) {
+                alert('Veuillez ajouter au moins un produit');
+                return;
+            }
+            
+            const client = document.getElementById('client').value;
+            const mention = document.getElementById('mention').value;
+            const statutPaiement = document.getElementById('statut-paiement').value;
+            
+            if (!client) {
+                alert('Veuillez saisir le nom du client');
+                return;
+            }
+            
+            const total = produits.reduce((sum, prod) => sum + prod.total, 0);
+            const now = new Date();
+            
+            // Mettre à jour l'aperçu
+            document.getElementById('invoice-date').textContent = now.toLocaleDateString();
+            document.getElementById('invoice-client').textContent = client;
+            document.getElementById('invoice-mention').textContent = mention || 'Aucune';
+            document.getElementById('invoice-number').textContent = `FAC-${prochainNumero.toString().padStart(4, '0')}`;
+            
+            let itemsHtml = '';
+            produits.forEach(prod => {
+                itemsHtml += `
+                    <tr>
+                        <td>${prod.nom}</td>
+                        <td>${prod.quantite}</td>
+                        <td>${prod.prix.toFixed(2)} €</td>
+                        <td>${prod.total.toFixed(2)} €</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('invoice-items-body').innerHTML = itemsHtml;
+            document.getElementById('invoice-total').textContent = `${total.toFixed(2)} €`;
+            
+            const statusText = statutPaiement === 'paye' ? 
+                '<span class="status-badge status-paid">Payé</span>' : 
+                '<span class="status-badge status-debt">Dette</span>';
+                
+            document.getElementById('invoice-status').innerHTML = statusText;
+            
+            // Afficher l'aperçu
+            document.getElementById('preview-facture').style.display = 'block';
+        });
+        
+        // Imprimer la facture
+        document.getElementById('imprimer-facture').addEventListener('click', () => {
+            window.print();
+        });
+        
+        // Sauvegarder la facture
+        document.getElementById('sauvegarder-facture').addEventListener('click', () => {
+            const client = document.getElementById('client').value;
+            const mention = document.getElementById('mention').value;
+            const statutPaiement = document.getElementById('statut-paiement').value;
+            const total = produits.reduce((sum, prod) => sum + prod.total, 0);
+            const now = new Date();
+            
+            const facture = {
+                numero: prochainNumero,
+                date: now.toISOString(),
+                client: client,
+                mention: mention,
+                statut: statutPaiement,
+                produits: [...produits],
+                total: total
+            };
+            
+            factures.push(facture);
+            localStorage.setItem('factures', JSON.stringify(factures));
+            
+            prochainNumero++;
+            
+            alert('Facture sauvegardée avec succès!');
+            
+            // Réinitialiser le formulaire
+            document.getElementById('client').value = '';
+            document.getElementById('mention').value = '';
+            document.getElementById('statut-paiement').value = 'paye';
+            produits = [];
+            mettreAJourListeProduits();
+            document.getElementById('preview-facture').style.display = 'none';
+        });
+        
+        // Charger l'historique des factures
+        function chargerHistorique() {
+            const listeFactures = document.getElementById('liste-factures');
+            const recherche = document.getElementById('recherche-facture').value.toLowerCase();
+            
+            let facturesFiltrees = factures;
+            if (recherche) {
+                facturesFiltrees = factures.filter(f => 
+                    f.client.toLowerCase().includes(recherche) || 
+                    f.numero.toString().includes(recherche)
+                );
+            }
+            
+            if (facturesFiltrees.length === 0) {
+                listeFactures.innerHTML = '<p>Aucune facture enregistrée</p>';
+                return;
+            }
+            
+            let html = '<table>';
+            html += `
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Date</th>
+                        <th>Client</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            facturesFiltrees.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(facture => {
+                const date = new Date(facture.date);
+                const statusClass = facture.statut === 'paye' ? 'status-paid' : 'status-debt';
+                const statusText = facture.statut === 'paye' ? 'Payé' : 'Dette';
+                
+                html += `
+                    <tr>
+                        <td>${facture.numero}</td>
+                        <td>${date.toLocaleDateString()}</td>
+                        <td>${facture.client}</td>
+                        <td>${facture.total.toFixed(2)} €</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button onclick="afficherFacture(${facture.numero})" style="width: auto; padding: 5px 10px;">Voir</button>
+                            <button onclick="supprimerFacture(${facture.numero})" class="danger" style="width: auto; padding: 5px 10px;">Suppr</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            listeFactures.innerHTML = html;
+        }
+        
+        // Recherche de factures
+        document.getElementById('recherche-facture').addEventListener('input', chargerHistorique);
+        
+        // Afficher une facture
+        function afficherFacture(numero) {
+            const facture = factures.find(f => f.numero === numero);
+            if (!facture) return;
+            
+            const date = new Date(facture.date);
+            
+            // Mettre à jour l'aperçu
+            document.getElementById('invoice-date').textContent = date.toLocaleDateString();
+            document.getElementById('invoice-client').textContent = facture.client;
+            document.getElementById('invoice-mention').textContent = facture.mention || 'Aucune';
+            document.getElementById('invoice-number').textContent = `FAC-${facture.numero.toString().padStart(4, '0')}`;
+            
+            let itemsHtml = '';
+            facture.produits.forEach(prod => {
+                itemsHtml += `
+                    <tr>
+                        <td>${prod.nom}</td>
+                        <td>${prod.quantite}</td>
+                        <td>${prod.prix.toFixed(2)} €</td>
+                        <td>${prod.total.toFixed(2)} €</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('invoice-items-body').innerHTML = itemsHtml;
+            document.getElementById('invoice-total').textContent = `${facture.total.toFixed(2)} €`;
+            
+            const statusText = facture.statut === 'paye' ? 
+                '<span class="status-badge status-paid">Payé</span>' : 
+                '<span class="status-badge status-debt">Dette</span>';
+                
+            document.getElementById('invoice-status').innerHTML = statusText;
+            
+            // Afficher l'aperçu
+            document.getElementById('preview-facture').style.display = 'block';
+            
+            // Basculer vers l'onglet facturation
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            document.querySelector('[data-tab="facturation"]').classList.add('active');
+            document.getElementById('facturation').classList.add('active');
+        }
+        
+        // Supprimer une facture
+        function supprimerFacture(numero) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) return;
+            
+            factures = factures.filter(f => f.numero !== numero);
+            localStorage.setItem('factures', JSON.stringify(factures));
+            
+            chargerHistorique();
+            calculerStatistiques();
+        }
+        
+        // Calculer les statistiques
+        function calculerStatistiques() {
+            const totalVentes = factures.reduce((sum, f) => sum + f.total, 0);
+            const totalDettes = factures
+                .filter(f => f.statut === 'dette')
+                .reduce((sum, f) => sum + f.total, 0);
+            const totalBenefices = totalVentes * 0.3; // Estimation à 30%
+            
+            document.getElementById('total-ventes').textContent = `${totalVentes.toFixed(2)} €`;
+            document.getElementById('total-dettes').textContent = `${totalDettes.toFixed(2)} €`;
+            document.getElementById('total-benefices').textContent = `${totalBenefices.toFixed(2)} €`;
+            
+            // Afficher les dettes
+            const dettes = factures.filter(f => f.statut === 'dette');
+            const listeDettes = document.getElementById('liste-dettes');
+            
+            if (dettes.length === 0) {
+                listeDettes.innerHTML = '<p>Aucune dette en attente</p>';
+                return;
+            }
+            
+            let html = '<table>';
+            html += `
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            dettes.forEach(dette => {
+                const date = new Date(dette.date);
+                html += `
+                    <tr>
+                        <td>${dette.numero}</td>
+                        <td>${dette.client}</td>
+                        <td>${date.toLocaleDateString()}</td>
+                        <td>${dette.total.toFixed(2)} €</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            listeDettes.innerHTML = html;
+        }
+        
+        // Service Worker pour PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW enregistré: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('Échec enregistrement SW: ', registrationError);
+                    });
+            });
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            mettreAJourListeProduits();
+        });
+    </script>
+</body>
+</html>
