@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Facturation PWA">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzAiIGZpbGw9IiMwMDUzOTUiLz4KPHBhdGggZD0iTTg0IDEzMkM4NCAxMjQuODA1IDg5LjgwNDMgMTE5IDk3IDExOUMxMDQuMTk2IDExOSAxMTAgMTI0LjgwNSAxMTAgMTMyQzExMCAxMzkuMTk2IDEwNC4xOTYgMTQ1IDk3IDE0NUM4OS44MDQzIDE0NSA4NCAxMzkuMTk2IDg0IDEzMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05NyA1NEM5NyA1NCA4MiA1NCA4MiA3MEM4MiA4NiA5NyAxMDMuODMgOTcgMTAzLjgzQzk3IDEwMy44MyAxMTIgODYgMTEyIDcwQzExMiA1NCA5NyA1NCA5NyA1NFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNDAgMTQwVjE1Nkg1NFYxNDBIMTQwWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+">
-    <title>Facturation PWA</title>
+    <title>Facturation Pro</title>
     <style>
         :root {
             --primary: #005395;
@@ -263,7 +263,7 @@
 </head>
 <body>
     <header>
-        <h1>Facturation PWA</h1>
+        <h1>Facturation Pro</h1>
     </header>
     
     <div class="container">
@@ -296,7 +296,7 @@
                 
                 <div class="form-group">
                     <label for="prix">Prix unitaire</label>
-                    <input type="number" id="prix" placeholder="Prix" min="0" step="0.01">
+                    <input type="number" id="prix" placeholder="Prix" min="0" step="1">
                 </div>
                 
                 <div class="form-group">
@@ -390,17 +390,17 @@
                 
                 <div class="summary-card">
                     <h3>Chiffre d'affaires total</h3>
-                    <p class="summary-value" id="total-ventes">0 €</p>
+                    <p class="summary-value" id="total-ventes">0 CFA</p>
                 </div>
                 
                 <div class="summary-card">
                     <h3>Total des dettes</h3>
-                    <p class="summary-value" id="total-dettes">0 €</p>
+                    <p class="summary-value" id="total-dettes">0 CFA</p>
                 </div>
                 
                 <div class="summary-card">
                     <h3>Bénéfice estimé (30%)</h3>
-                    <p class="summary-value" id="total-benefices">0 €</p>
+                    <p class="summary-value" id="total-benefices">0 CFA</p>
                 </div>
             </div>
             
@@ -482,7 +482,7 @@
                 html += `
                     <div class="product-item">
                         <div>${prod.nom} (x${prod.quantite})</div>
-                        <div>${prod.total.toFixed(2)} €</div>
+                        <div>${prod.total} CFA</div>
                         <button onclick="supprimerProduit(${index})" class="danger" style="width: auto; padding: 5px 10px;">X</button>
                     </div>
                 `;
@@ -528,14 +528,14 @@
                     <tr>
                         <td>${prod.nom}</td>
                         <td>${prod.quantite}</td>
-                        <td>${prod.prix.toFixed(2)} €</td>
-                        <td>${prod.total.toFixed(2)} €</td>
+                        <td>${prod.prix.toFixed(0)} CFA</td>
+                        <td>${prod.total.toFixed(0)} CFA</td>
                     </tr>
                 `;
             });
             
             document.getElementById('invoice-items-body').innerHTML = itemsHtml;
-            document.getElementById('invoice-total').textContent = `${total.toFixed(2)} €`;
+            document.getElementById('invoice-total').textContent = `${total.toFixed(0)} CFA`;
             
             const statusText = statutPaiement === 'paye' ? 
                 '<span class="status-badge status-paid">Payé</span>' : 
@@ -629,7 +629,7 @@
                         <td>${facture.numero}</td>
                         <td>${date.toLocaleDateString()}</td>
                         <td>${facture.client}</td>
-                        <td>${facture.total.toFixed(2)} €</td>
+                        <td>${facture.total.toFixed(0)} CFA</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>
                             <button onclick="afficherFacture(${facture.numero})" style="width: auto; padding: 5px 10px;">Voir</button>
@@ -665,14 +665,14 @@
                     <tr>
                         <td>${prod.nom}</td>
                         <td>${prod.quantite}</td>
-                        <td>${prod.prix.toFixed(2)} €</td>
-                        <td>${prod.total.toFixed(2)} €</td>
+                        <td>${prod.prix.toFixed(0)} CFA</td>
+                        <td>${prod.total.toFixed(0)} CFA</td>
                     </tr>
                 `;
             });
             
             document.getElementById('invoice-items-body').innerHTML = itemsHtml;
-            document.getElementById('invoice-total').textContent = `${facture.total.toFixed(2)} €`;
+            document.getElementById('invoice-total').textContent = `${facture.total.toFixed(0)} CFA`;
             
             const statusText = facture.statut === 'paye' ? 
                 '<span class="status-badge status-paid">Payé</span>' : 
@@ -710,9 +710,9 @@
                 .reduce((sum, f) => sum + f.total, 0);
             const totalBenefices = totalVentes * 0.3; // Estimation à 30%
             
-            document.getElementById('total-ventes').textContent = `${totalVentes.toFixed(2)} €`;
-            document.getElementById('total-dettes').textContent = `${totalDettes.toFixed(2)} €`;
-            document.getElementById('total-benefices').textContent = `${totalBenefices.toFixed(2)} €`;
+            document.getElementById('total-ventes').textContent = `${totalVentes.toFixed(0)} CFA`;
+            document.getElementById('total-dettes').textContent = `${totalDettes.toFixed(0)} CFA`;
+            document.getElementById('total-benefices').textContent = `${totalBenefices.toFixed(0)} CFA`;
             
             // Afficher les dettes
             const dettes = factures.filter(f => f.statut === 'dette');
@@ -743,7 +743,7 @@
                         <td>${dette.numero}</td>
                         <td>${dette.client}</td>
                         <td>${date.toLocaleDateString()}</td>
-                        <td>${dette.total.toFixed(2)} €</td>
+                        <td>${dette.total.toFixed(0)} CFA</td>
                     </tr>
                 `;
             });
