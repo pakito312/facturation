@@ -1109,9 +1109,9 @@ self.addEventListener('message', event => {
             modal.innerHTML = `
                 <div class="modal-content">
                     <button class="close-modal">&times;</button>
-                    ${factureHTML}
+                   <div id="contentfact"> ${factureHTML}</div>
                     <div style="text-align: center; margin-top: 30px;">
-                        <button class="btn" id="printModalBtn" style="margin-right: 10px;">🖨️ Imprimer</button>
+                        <button class="btn" id="printModalBtn" style="margin-right: 10px;"> Imprimer</button>
                         <button class="btn btn-secondary" id="closeModalBtn">❌ Fermer</button>
                     </div>
                 </div>
@@ -1135,7 +1135,7 @@ self.addEventListener('message', event => {
 
         // Imprimer facture depuis la modal
         function imprimerFactureModal(modal) {
-            const modalContent = modal.querySelector('.modal-content');
+            const modalContent = modal.querySelector('#contentfact');
             const printContent = modalContent.cloneNode(true);
             
             // Supprimer les boutons d'action
